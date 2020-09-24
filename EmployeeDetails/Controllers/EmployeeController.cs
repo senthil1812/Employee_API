@@ -56,9 +56,9 @@ namespace EmployeeDetails.Controllers
             {
                 #region Precondition Checks
 
-                if (id == null || id == 0)
+                if (id > 0)
                 {
-                    result.Value = "User id is required!";
+                    result.Value = "Employee id is required!";
                     result.StatusCode = (int)System.Net.HttpStatusCode.PreconditionFailed;
                     return StatusCode((int)System.Net.HttpStatusCode.PreconditionFailed, result);
                 }
@@ -192,9 +192,9 @@ namespace EmployeeDetails.Controllers
             {
                 #region Precondition Checks
 
-                if (id == null || id == 0)
+                if (id > 0)
                 {
-                    result.Value = "User id is required!";
+                    result.Value = "Employee id is required!";
                     result.StatusCode = (int)System.Net.HttpStatusCode.PreconditionFailed;
                     return StatusCode((int)System.Net.HttpStatusCode.PreconditionFailed, result);
                 }
