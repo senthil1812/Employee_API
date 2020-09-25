@@ -20,6 +20,7 @@ namespace EmployeeDetails.Controllers
             _employeeBusiness = employeeBusiness;
         }
 
+        #region Get all Employee Deatils 
         [HttpGet]
         public IActionResult Get()
         {
@@ -47,7 +48,9 @@ namespace EmployeeDetails.Controllers
                 return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, result);
             }
         }
+        #endregion
 
+        #region Get Employee Deatils By Id
         [HttpGet("{id}", Name = "Get")]
         public IActionResult Get(int id)
         {
@@ -84,7 +87,9 @@ namespace EmployeeDetails.Controllers
                 return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, result);
             }
         }
+        #endregion
 
+        #region Add Employee Details
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] Employee model)
         {
@@ -113,16 +118,26 @@ namespace EmployeeDetails.Controllers
                 }
 
                 #endregion
-                var createresult = await _employeeBusiness.CreateAsync(model);
-                if (createresult.IsSuccess)
+                var checkEmpDetail = _employeeBusiness.SelectbyEmail(model.Email);
+                if (checkEmpDetail.Data == null)
                 {
-                    result.Value = createresult.Data;
-                    result.StatusCode = (int)System.Net.HttpStatusCode.OK;
-                    return StatusCode((int)System.Net.HttpStatusCode.OK, result);
+                    var createresult = await _employeeBusiness.CreateAsync(model);
+                    if (createresult.IsSuccess)
+                    {
+                        result.Value = createresult.Data;
+                        result.StatusCode = (int)System.Net.HttpStatusCode.OK;
+                        return StatusCode((int)System.Net.HttpStatusCode.OK, result);
+                    }
+                    else
+                    {
+                        result.Value = "Issue while employee insert!";
+                        result.StatusCode = (int)System.Net.HttpStatusCode.OK;
+                        return StatusCode((int)System.Net.HttpStatusCode.OK, result);
+                    }
                 }
                 else
                 {
-                    result.Value = "Issue while employee insert!";
+                    result.Value = "Email already exists!!";
                     result.StatusCode = (int)System.Net.HttpStatusCode.OK;
                     return StatusCode((int)System.Net.HttpStatusCode.OK, result);
                 }
@@ -134,7 +149,9 @@ namespace EmployeeDetails.Controllers
                 return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, result);
             }
         }
+        #endregion
 
+        #region Update Employee Details
         [HttpPut]
         public IActionResult Put([FromBody] Employee model)
         {
@@ -162,18 +179,28 @@ namespace EmployeeDetails.Controllers
                 }
 
                 #endregion
-                var updateresult = _employeeBusiness.Update(model);
-                if (updateresult.Data != null)
+                var checkEmpDetail = _employeeBusiness.GetByCondition(x=>x.Email == model.Email && x.Id != model.Id);
+                if (checkEmpDetail.Data == null)
                 {
-                    result.Value = updateresult;
-                    result.StatusCode = (int)System.Net.HttpStatusCode.OK;
-                    return StatusCode((int)System.Net.HttpStatusCode.OK, result);
+                    var updateresult = _employeeBusiness.Update(model);
+                    if (updateresult.Data != null)
+                    {
+                        result.Value = updateresult;
+                        result.StatusCode = (int)System.Net.HttpStatusCode.OK;
+                        return StatusCode((int)System.Net.HttpStatusCode.OK, result);
+                    }
+                    else
+                    {
+                        result.Value = "Issue while update employee detail!";
+                        result.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
+                        return StatusCode((int)System.Net.HttpStatusCode.BadRequest, result);
+                    }
                 }
                 else
                 {
-                    result.Value = "Issue while update employee detail!";
-                    result.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
-                    return StatusCode((int)System.Net.HttpStatusCode.BadRequest, result);
+                    result.Value = "Email already exists!!";
+                    result.StatusCode = (int)System.Net.HttpStatusCode.OK;
+                    return StatusCode((int)System.Net.HttpStatusCode.OK, result);
                 }
             }
             catch (Exception ex)
@@ -183,7 +210,9 @@ namespace EmployeeDetails.Controllers
                 return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, result);
             }
         }
+        #endregion
 
+        #region Delete Employee Deatils
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -214,7 +243,6 @@ namespace EmployeeDetails.Controllers
                     result.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
                     return StatusCode((int)System.Net.HttpStatusCode.BadRequest, result);
                 }
-                return new JsonResult(result);
             }
             catch (Exception ex)
             {
@@ -223,8 +251,9 @@ namespace EmployeeDetails.Controllers
                 return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, result);
             }
         }
+        #endregion
 
-
+        #region Get Deatils By Email
         [HttpGet("GetbyEmail/{email}")]
         public IActionResult SelectbyEmail(string email)
         {
@@ -258,5 +287,6 @@ namespace EmployeeDetails.Controllers
                 return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, result);
             }
         }
+        #endregion
     }
 }

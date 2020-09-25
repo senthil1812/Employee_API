@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -106,6 +107,20 @@ namespace DataLayer.Repository
                 Data = null,
                 IsSuccess = true,
                 SuccessMessage = "Record Deleted Successfully!!"
+
+            };
+
+            return resultModel;
+        }
+
+        public Result<T> GetByCondition(Expression<Func<T, bool>> predicate)
+        {
+            var result = _repositoryContext.Set<T>().Where(predicate).ToList().FirstOrDefault();
+            var resultModel = new Result<T>
+            {
+                Data = result,
+                IsSuccess = true,
+                SuccessMessage = "Record Details!!"
 
             };
 

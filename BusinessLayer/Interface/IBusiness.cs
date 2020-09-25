@@ -1,6 +1,7 @@
 ﻿using BusinessModels;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,7 @@ namespace BusinessLayer.Interface
         Result<List<T>> GetAll();
 
         Task<Result<T>> CreateAsync(T data);
+        Result<T> GetByCondition(Expression<Func<T, bool>> predicate);
 
     }
 }

@@ -3,6 +3,7 @@ using BusinessModels;
 using DataLayer.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,6 +47,10 @@ namespace BusinessLayer.Class
         {
             return _repository.Delete(id);
         }
-      
+
+        public Result<T> GetByCondition(Expression<Func<T, bool>> predicate)
+        {
+            return _repository.GetByCondition(predicate);
+        }
     }
 }
