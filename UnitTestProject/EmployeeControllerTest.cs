@@ -30,7 +30,7 @@ namespace UnitTestProject
             _configuration = builder.Build();
             var services = new ServiceCollection();
             services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(_configuration["ConnectionStrings:DataBaseConnection"]));
-            services.AddTransient<IEmployeeBusiness<Employee>, EmployeeBusiness>();
+            services.AddScoped<IEmployeeBusiness<Employee>, EmployeeBusiness>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             var serviceProvider = services.BuildServiceProvider();
